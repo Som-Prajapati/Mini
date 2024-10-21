@@ -14,7 +14,7 @@ export const createUserSchema = z.object({
 export const createUserValidator = zValidator('json', createUserSchema);
 
 export const createListSchema = z.object({
-  name: z.string().max(20),  
+  name: z.string().max(30),  
   user_gmail: z.string().email().max(30),
 });
 
@@ -24,11 +24,13 @@ export const createListValidator = zValidator('json', createListSchema);
 export const createTaskSchema = z.object({
   title: z.string().max(50),
   description: z.string().max(300),
-  status: z.string().max(10).optional(),
-  end_d: z.string().max(30).optional(),
+  status: z.enum(["ongoing", "completed", "missed"]),
+  end_d: z.date().optional(),
+  start_d: z.string().max(30).optional(),
   priority: z.number().int().max(5).optional(),
   user_gmail: z.string().max(30).email(),
-  list_name: z.string().max(30)
+  list_name: z.string().max(30).optional(),
+
 });
 
 
@@ -46,6 +48,7 @@ export const createTask_assignedValidator = zValidator('json', createTask_assign
 
 export const createTeamSchema = z.object({
   title: z.string().max(50),
+  user_array : z.array(z.string().max(30))
 });
 
 
@@ -76,6 +79,22 @@ export const createFeedbackValidator = zValidator('json', createFeedbackSchema);
 export const getUserSchema = z.object({
 });
 export const getUserValidator = zValidator('json', getUserSchema);
+
+export const getListSchema = z.object({
+  user_gmail : z.string().max(30).email()
+});
+export const getListValidator = zValidator('json', getListSchema);
+
+export const getTaskSchema = z.object({
+  user_gmail: z.string().max(30).email(),
+  list_name : z.string().max(30)
+});
+export const getTaskValidator = zValidator('json', getTaskSchema);
+
+
+
+
+
 // export const getFeedbackSchema = z.object({
 // });
   
@@ -89,12 +108,46 @@ export const getUserValidator = zValidator('json', getUserSchema);
 export const updateUserSchema = z.object({
   user_gmail :  z.string().max(30).email(),
   name : z.string().max(30).optional(),
-  phone: z.number().int().max(10).optional()
+  phone: z.number().int().max(9999999999).optional(),
+  password: z.string().max(30).optional(),
+  address: z.string().max(30).optional()
+
+
 });
 
 export const updateUserValidator = zValidator('json', updateUserSchema);
 
+export const updateTaskSchema = z.object({
+  user_gmail :  z.string().max(30).email(),
+  task_name: z.string().max(50),
+  status: z.enum(["ongoing", "completed", "missed"]),
+});
 
+export const updateTaskValidator = zValidator('json', updateTaskSchema);
+
+
+
+
+
+
+
+
+
+
+
+
+//// Delete Schema and Validators
+export const deleteListSchema = z.object({
+  user_gmail: z.string().max(30).email(),
+  name :  z.string().max(30)
+});
+export const deleteListValidator = zValidator('json', deleteListSchema);
+
+export const deleteTaskSchema = z.object({
+  user_gmail: z.string().max(30).email(),
+  task_name :  z.string().max(50)
+});
+export const deleteTaskValidator = zValidator('json', deleteTaskSchema);
 
 
 

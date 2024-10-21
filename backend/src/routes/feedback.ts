@@ -5,6 +5,9 @@ import { feedback, user } from '../database/schema';
 import { env } from 'hono/adapter';
 import { createFeedbackValidator} from '../validators';
 
+
+///done.
+
 const app = new Hono<{ Bindings: Env }>();
 app.get('/', (c) => c.json({ msg: 'server up and running' }));
 
@@ -32,7 +35,7 @@ app.get('/', (c) => c.json({ msg: 'server up and running' }));
 // });
 
 
-	app.post('/feedback',createFeedbackValidator, async (c) => {
+	app.post('/create',createFeedbackValidator, async (c) => {
 		const db = database(c.env.DB);
 		const data = c.req.valid('json');
 
