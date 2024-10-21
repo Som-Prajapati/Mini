@@ -1,9 +1,9 @@
 import { Hono } from 'hono';
 import database from '../database';
 import { and, eq, sql } from 'drizzle-orm';
-import { list , user ,task, task_assigned } from '../database/schema';
+import {list , team, task, user , user_team, task_assigned} from '../database/schema';
 import { env } from 'hono/adapter';
-import { createTaskValidator , deleteTaskValidator, getTaskValidator , updateTaskValidator} from '../validators';
+import {createTeamTaskValidator , deleteTeamTaskValidator, getTeamTaskValidator} from '../validators';
 
 
 ///// done..
@@ -14,7 +14,7 @@ app.get('/', (c) => c.json({ msg: 'server up and running' }));
 
 
 
-	app.post('/create',createTaskValidator, async (c) => {
+	app.post('/create',createTeamTaskValidator, async (c) => {
 		const db = database(c.env.DB);
 		const data = c.req.valid('json');
 
@@ -23,15 +23,13 @@ app.get('/', (c) => c.json({ msg: 'server up and running' }));
 			if (!reqUser_id) {
 				return c.json({ msg: "User not found" }, 404);
       }
-      let reqList_id = null;  
-      if (data.list_name) {
-        const [listItem] = await db.select({ list_id: list.list_id }).from(list).where(eq(list.name, data.list_name));
-  
-        if (!listItem) {
-          return c.json({ msg: "List not found" }, 404);  // Handle case where list is not found
-        }
-        reqList_id = listItem.list_id;  // Assign the list_id from the fetched result
+      
+			const [reqTeam_id] = await db.select({ team_id: team.team_id }).from(team).where(eq(team.title, data.team_name));
+			if (!reqTeam_id) {
+				return c.json({ msg: "Team not found" }, 404);
       }
+      
+
       const taskData = {
         title: data.title,
         descrption: data.description,  // Note: 'description' is misspelled here
@@ -40,26 +38,39 @@ app.get('/', (c) => c.json({ msg: 'server up and running' }));
         end_d: data.end_d,
         priority: data.priority ,  // Default to 0 if not provided
         assigner_id: reqUser_id.user_id,
-        list_id: reqList_id // Use the correct variable
+        team_id: reqTeam_id.team_id // Use the correct variable
       };
 			const [newTask] = await db.insert(task).values(taskData).returning({task_id: task.task_id  })
       
     
-      const assignedData = {
-        task_id: newTask.task_id ,
-        user_id: reqUser_id.user_id
+			const newUsers = await db
+			.select({
+				user_id: user.user_id,
+			})
+			.from(user)
+			.where(sql`${user.name} IN (${sql.join([...data.user_array], sql`,`)})`);
+			
+			
+			const updatedUser = newUsers.map((user) => user.user_id);
+			
+			
 
-      }
-			const [newAssigned] = await db.insert(task_assigned).values(assignedData).returning({task_id : task.task_id  })
+      const assignedData = updatedUser.map((user_id) => ({
+				task_id: newTask.task_id,  // Use the new task's ID
+				user_id: user_id   // Assign each user to the task
+			}));
 
-      
-      return c.json({ ...newTask, msg: 'task made' });
+
+			const teamTask = await db.insert(task_assigned).values(assignedData);
+
+
+      return c.json({ ...newTask , ...newUsers , teamTask , msg: 'team task made' });
 		} catch (error) {
-			return c.json({ msg: "couldn't make a task" }, 500)
+			return c.json({ msg: "couldn't make a team task" }, 500)
 		}
   });
   
-  app.get('/fetch',getTaskValidator, async (c) => {
+  app.get('/fetch',getTeamTaskValidator, async (c) => {
 	const db = database(c.env.DB);
 	const  data  = c.req.valid('json');
 
@@ -72,24 +83,42 @@ app.get('/', (c) => c.json({ msg: 'server up and running' }));
 				return c.json({ msg: "user not found" }, 404);  // Handle case where user is not found
       }
       
-      const [reqList_id] = await db.select({ list_id: list.list_id }).from(list).where(and(eq(list.name, data.list_name),eq(list.user_id, reqUser_id.user_id)));
+      const [reqTeam_id] = await db.select({ team_id: team.team_id }).from(team).where(eq(team.title, data.team_name));
 
-			if (!reqList_id) {
-				return c.json({ msg: "list not found" }, 404);  // Handle case where user is not found
+			if (!reqTeam_id) {
+				return c.json({ msg: "team not found" }, 404);  // Handle case where user is not found
       }
       
 
 		const newTask = await db.query.task.findMany({
-      where:and (eq(task.assigner_id, reqUser_id.user_id),eq(task.list_id, reqList_id.list_id)),
+      where:eq(task.team_id, reqTeam_id.team_id),
       columns: {
         title: true,
         descrption: true,
         start_d: true,
         end_d: true,
         priority: true,
-        status: true,
+				status: true,
+				assigner_id : true
       },
-    });
+		});
+			
+			// const teamTask = await db
+      // .select({
+      //   task_id: task.task_id,
+			// 	title: task.title,
+			// 	descrption: task.descrption,
+			// 	start_d: task.start_d,
+			// 	end_d: task.end_d,
+			// 	priority: task.priority,
+			// 	status: task.status,
+			// 	assigner_id : task.assigner_id,
+      //   assigned_user_id: task_assigned.user_id // Assuming this is the field for user_id in task_assigned
+      // })
+      // .from(task)
+      // .innerJoin(task_assigned, eq(task.task_id, task_assigned.task_id))
+      // .where(eq(task.task_id, task_id));
+			// // const taskRecieved = await db.select({ user_id: task_assigned.user_id }).from(task_assigned).where(eq(task_assigned.task_id, ));
 
 		if (!newTask) return c.json({ msg: 'Task not found' }, 404);
 
@@ -102,19 +131,19 @@ app.get('/', (c) => c.json({ msg: 'server up and running' }));
 });
 
 
-app.delete('/delete', deleteTaskValidator, async (c) => {
+app.delete('/delete', deleteTeamTaskValidator, async (c) => {
 	const db = database(c.env.DB);
 	const  data  = c.req.valid('json');
 
     try {
     
       
-			const [reqUser_id] = await db.select({ user_id: user.user_id }).from(user).where(eq(user.gmail, data.user_gmail));
+			const [reqTeam_id] = await db.select({ team_id: team.team_id }).from(team).where(eq(team.title, data.team_name));
 
-			if (!reqUser_id) {
-				return c.json({ msg: "user not found" }, 404);  // Handle case where user is not found
-		}
-	  await db.delete(task).where(and(eq(task.assigner_id, reqUser_id.user_id),eq(task.title, data.task_name)));
+			if (!reqTeam_id) {
+				return c.json({ msg: "team not found" }, 404);  // Handle case where user is not found
+      }
+	  await db.delete(task).where(and(eq(task.team_id, reqTeam_id.team_id),eq(task.title, data.task_name)));
 		
 	
 
@@ -126,35 +155,35 @@ app.delete('/delete', deleteTaskValidator, async (c) => {
 
 
 
-app.patch('/update', updateTaskValidator, async (c) => {
-	const db = database(c.env.DB);
-	const data = c.req.valid('json');
+// app.patch('/update', updateTaskValidator, async (c) => {
+// 	const db = database(c.env.DB);
+// 	const data = c.req.valid('json');
 
-	try {
+// 	try {
 
-		const [reqUser_id] = await db.select({ user_id: user.user_id }).from(user).where(eq(user.gmail, data.user_gmail));
+// 		const [reqUser_id] = await db.select({ user_id: user.user_id }).from(user).where(eq(user.gmail, data.user_gmail));
 
-		if (!reqUser_id) {
-			return c.json({ msg: "User not found" }, 404);  // Handle case where user is not found
-		}
+// 		if (!reqUser_id) {
+// 			return c.json({ msg: "User not found" }, 404);  // Handle case where user is not found
+// 		}
 		
-		const taskData = {
-						// user_id: reqUser_id.user_id,
-            status: data.status,
-            priority : 0
-					}	
+// 		const taskData = {
+// 						// user_id: reqUser_id.user_id,
+//             status: data.status,
+//             priority : 0
+// 					}	
 
-					const [updateTask] = await db
-					.update(task)
-					.set(taskData)  // Set the fields to be updated
-					.where(and(eq(task.assigner_id, reqUser_id.user_id),(eq(task.title, data.task_name) )))  // Ensure correct user is updated
-					.returning({ user_id : user.user_id });  // Return the columns after update
+// 					const [updateTask] = await db
+// 					.update(task)
+// 					.set(taskData)  // Set the fields to be updated
+// 					.where(and(eq(task.assigner_id, reqUser_id.user_id),(eq(task.title, data.task_name) )))  // Ensure correct user is updated
+// 					.returning({ user_id : user.user_id });  // Return the columns after update
 
-		return c.json({ ...updateTask, msg: 'Task marked completed' });
-	} catch (error) {
-		return c.json({ msg: "couldn't mark completed" }, 500);
-	}
-});
+// 		return c.json({ ...updateTask, msg: 'Task marked completed' });
+// 	} catch (error) {
+// 		return c.json({ msg: "couldn't mark completed" }, 500);
+// 	}
+// });
 
 
 

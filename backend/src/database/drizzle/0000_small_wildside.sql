@@ -23,8 +23,10 @@ CREATE TABLE `task` (
 	`priority` integer DEFAULT 0,
 	`assigner_id` integer,
 	`list_id` integer,
+	`team_id` integer,
 	FOREIGN KEY (`assigner_id`) REFERENCES `user`(`user_id`) ON UPDATE no action ON DELETE cascade,
-	FOREIGN KEY (`list_id`) REFERENCES `list`(`list_id`) ON UPDATE no action ON DELETE cascade
+	FOREIGN KEY (`list_id`) REFERENCES `list`(`list_id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`team_id`) REFERENCES `team`(`team_id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `task_assigned` (
@@ -38,7 +40,8 @@ CREATE TABLE `task_assigned` (
 CREATE TABLE `team` (
 	`team_id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`title` text NOT NULL,
-	`create_d` text DEFAULT CURRENT_TIMESTAMP
+	`create_d` text DEFAULT CURRENT_TIMESTAMP,
+	`imgText` text
 );
 --> statement-breakpoint
 CREATE TABLE `user` (
@@ -47,7 +50,8 @@ CREATE TABLE `user` (
 	`address` text,
 	`gmail` text NOT NULL,
 	`password` text,
-	`phone` integer
+	`phone` integer,
+	`imgText` text
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `user_gmail_unique` ON `user` (`gmail`);--> statement-breakpoint

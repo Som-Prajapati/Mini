@@ -2,13 +2,14 @@ import { sql } from 'drizzle-orm';
 import { integer, sqliteTable, text , primaryKey} from 'drizzle-orm/sqlite-core';
 import { unstable_generateASSETSBinding } from 'wrangler';
 
-export const user = sqliteTable("user", {
+export const user = 	sqliteTable("user", {
   user_id: integer('user_id',{mode : 'number'}).primaryKey({ autoIncrement : true }),
   name: text('name').notNull(), 
   address: text('address'),
   gmail: text('gmail').notNull().unique(),
   password: text('password'),
   phone: integer('phone'),
+  imgText : text('imgText')
 });
 
 export const list = sqliteTable("list", {
@@ -28,7 +29,7 @@ export const task = sqliteTable("task", {
   priority: integer("priority").default(0),
   assigner_id: integer("assigner_id").references(() => user.user_id, { onDelete : 'cascade' }),
   list_id : integer("list_id").references(() => list.list_id, { onDelete : 'cascade' }),
-  
+  team_id :  integer("team_id").references(() => team.team_id, { onDelete : 'cascade' }),
 });
 
 export const task_assigned = sqliteTable("task_assigned", {
@@ -42,8 +43,8 @@ export const task_assigned = sqliteTable("task_assigned", {
 export const team = sqliteTable("team", {
   team_id: integer('team_id', { mode: 'number' }).primaryKey({ autoIncrement: true }),  
   title: text('title').notNull(),
-  create_d: text("create_d").default(sql`CURRENT_TIMESTAMP`)
-
+  create_d: text("create_d").default(sql`CURRENT_TIMESTAMP`),
+  imgText : text('imgText')
 });
 
 export const user_team = sqliteTable("user_team", {

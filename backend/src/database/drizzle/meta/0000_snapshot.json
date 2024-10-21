@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "92d1f8ac-06d6-496b-be8e-b6ff9f22de71",
+  "id": "df150e90-e2b9-473a-90d5-c8ca4bdbff01",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "feedback": {
@@ -167,6 +167,13 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -193,6 +200,19 @@
           ],
           "columnsTo": [
             "list_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "task_team_id_team_team_id_fk": {
+          "name": "task_team_id_team_team_id_fk",
+          "tableFrom": "task",
+          "tableTo": "team",
+          "columnsFrom": [
+            "team_id"
+          ],
+          "columnsTo": [
+            "team_id"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -282,6 +302,13 @@
           "notNull": false,
           "autoincrement": false,
           "default": "CURRENT_TIMESTAMP"
+        },
+        "imgText": {
+          "name": "imgText",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -330,6 +357,13 @@
         "phone": {
           "name": "phone",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "imgText": {
+          "name": "imgText",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false

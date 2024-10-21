@@ -18,6 +18,8 @@ import feedback from './routes/feedback';
 import list from './routes/list';
 import myTask from './routes/my_task';
 import team from './routes/team';
+import teamTask from './routes/team_task';
+import taskAssigned from './routes/task_assigned';
 
 
 
@@ -29,7 +31,11 @@ app.route('/user', user);
 app.route('/feedback', feedback);
 app.route('/list', list);
 app.route('/myTask', myTask);
+app.route('/teamTask', teamTask);
 app.route('/team', team);
+app.route('/taskAssigned', taskAssigned);
+
+
 
 
 
