@@ -19,10 +19,14 @@ export function DialogDemo() {
     const handleChange = (e) => {
         setForm({...form,[e.target.name]:e.target.value})
     }
+    const handleClick = ()=>{
+      console.log("hello")
+      
+    }
   return (
     <Dialog >
       <DialogTrigger asChild>
-        <Button variant="outline" className='w-[280px] h-[40px] bg-zinc-950 text-white hover:bg-zinc-900 hover:text-white'>Create</Button>
+        <Button variant="outline" className='w-[20vw] h-[40px] bg-zinc-950 text-white hover:bg-zinc-900 hover:text-white'>Create</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-zinc-950">
         <DialogHeader>
@@ -40,7 +44,7 @@ export function DialogDemo() {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit">Save changes</Button>
+          <Button onClick={handleClick} type="submit" >Save changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

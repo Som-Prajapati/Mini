@@ -1,35 +1,67 @@
+'use client'
+import { signIn, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react"
 import React from 'react'
 import Sidebar from '@/components/Sidebar'
 import Create from '@/components/Create'
 import Cards from '@/components/Cards'
 import { ArrowUp, Menu, Trash2 } from 'lucide-react'
 import DialogDemo from '@/components/DialogDemo'
+import List from "@/components/List";
+import { useRouter } from "next/navigation";
+
+
 const Page = () => {
+
+  const { data: session } = useSession()
+  const router = useRouter()
+  console.log("HELLO",session?.user?.image)
+  const handleClick = () => {
+    console.log("Helo")
+    router.push(`/mypage/${1}/task/${1}`)
+  }
+
   return (
     <>
     {/* Sidebar */}
-    <div className='w-[25vw] h-[90.8vh] bg-#09090b top-[55px] sticky rounded-md m-1 flex flex-col items-center gap-3 p-2 border-zinc-800 border-[0.5px]'>
-      <div className='h-auto px-[5px] py-[10px] bg-#18181b w-[90%] rounded-md flex flex-col gap-2 justify-center items-center overflow-hidden'>
+    <div className='w-[25vw] h-[90.8vh] bg-#09090b top-[55px] sticky rounded-md m-1 flex flex-col items-center gap-3 p-1 border-zinc-800 border-[0.5px] '>
+      <div className='h-auto px-[1px] py-[10px] bg-#18181b w-[90%] rounded-md flex flex-col gap-2 justify-center items-center '>
         <h3 className='text-2xl font-bold text-white'> My List </h3>
-        <div className='w-[30vw] h-[0.5px] bg-zinc-700'></div>
+        <div className='w-[21vw] h-[0.5px] bg-zinc-700'></div>
+        <div className="h-[71vh] overflow-y-scroll bg-#09090b ">
+        <div className="flex flex-col ">
+          <List />
+          <List />
+          <List />
+          <List />
+          <List />
+          <List />
+          <List />
+          <List />
+          <List />
+          <List />
+          <List />
+          <List />
+          <List />
+        </div></div>
       </div>
-      <div className=' fixed bottom-5'>
+      <div className=' fixed bottom-4'>
         <DialogDemo/>
       </div>
       </div>
       {/* Mypage */}
     <div className='h-auto w-auto bg-#09090b m-2 flex flex-col items-start gap-6 pt-[50px] '>
       
-      <Cards/>
-      <Cards/>
-      <Cards/>
-      <Cards/>
-      <Cards/>
-      <Cards/>
-      <Cards/>
-      <Cards/>
-      <Cards/>
-      <Cards/>
+      <Cards image={session?.user?.image} onClick={handleClick} />
+      <Cards image={session?.user?.image} onClick={handleClick} />
+      <Cards image={session?.user?.image} onClick={handleClick} />
+      <Cards image={session?.user?.image} onClick={handleClick} />
+      <Cards image={session?.user?.image} onClick={handleClick} />
+      <Cards image={session?.user?.image} onClick={handleClick} />
+      <Cards image={session?.user?.image} onClick={handleClick} />
+      <Cards image={session?.user?.image} onClick={handleClick} />
+      <Cards image={session?.user?.image} onClick={handleClick} />
+      <Cards image={session?.user?.image} onClick={handleClick} />
     </div>
     {/* Create */}
     <div className='h-[90.8vh] w-[35vw] rounded-md bg-#09090b top-[55px] sticky m-2 flex flex-col border border-zinc-800 border-1'>

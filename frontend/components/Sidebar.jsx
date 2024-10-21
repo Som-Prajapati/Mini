@@ -8,7 +8,7 @@ const Sidebar = () => {
     <div className='w-[4vw] h-[90.8vh] bg-#09090b top-[55px] sticky rounded-md m-1 border border-zinc-800 border-1'>
       <div className='flex justify-center items-center align-middle flex-col gap-7 mt-4  text-white'>
       {/* Link to the profile page */}
-      <Link href="/mypage">
+      <Link href={`/mypage/${1}/task/${1}`}>
             <User /> {/* Use <a> tag inside <Link> */}
           </Link>
 
