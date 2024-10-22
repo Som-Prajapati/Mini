@@ -53,7 +53,7 @@ app.get('/', (c) => c.json({ msg: 'server up and running' }));
 			const [newAssigned] = await db.insert(task_assigned).values(assignedData).returning({task_id : task.task_id  })
 
       
-      return c.json({ ...newTask, msg: 'task made' });
+      return c.json({ newTask, msg: 'task made' });
 		} catch (error) {
 			return c.json({ msg: "couldn't make a task" }, 500)
 		}
@@ -95,7 +95,7 @@ app.get('/', (c) => c.json({ msg: 'server up and running' }));
 
 	
 
-		return c.json({ ...newTask});
+		return c.json({ newTask});
 	} catch (error) {
 		return c.json({ msg: "couldn't fetch list" }, 500);
 	}
@@ -150,7 +150,7 @@ app.patch('/update', updateTaskValidator, async (c) => {
 					.where(and(eq(task.assigner_id, reqUser_id.user_id),(eq(task.title, data.task_name) )))  // Ensure correct user is updated
 					.returning({ user_id : user.user_id });  // Return the columns after update
 
-		return c.json({ ...updateTask, msg: 'Task marked completed' });
+		return c.json({ updateTask, msg: 'Task marked completed' });
 	} catch (error) {
 		return c.json({ msg: "couldn't mark completed" }, 500);
 	}

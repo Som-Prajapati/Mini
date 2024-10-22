@@ -33,7 +33,7 @@ app.get('/', (c) => c.json({ msg: 'server up and running' }));
 			
 			const [newList] = await db.insert(list).values(listData).returning({list_id : list.list_id , user_id : user.user_id });
 
-			return c.json({ ...newList, msg: 'list made' });
+			return c.json({ newList, msg: 'list made' });
 		} catch (error) {
 			return c.json({ msg: "couldn't make a list" }, 500);
 
@@ -63,7 +63,7 @@ app.get('/', (c) => c.json({ msg: 'server up and running' }));
 
 	
 
-		return c.json({ ...newList});
+		return c.json({ newList});
 	} catch (error) {
 		return c.json({ msg: "couldn't fetch list" }, 500);
 	}

@@ -63,7 +63,7 @@ app.get('/', (c) => c.json({ msg: 'server up and running' }));
 
 	
 
-		return c.json({ ...assign,reqTask_id });
+		return c.json({ assign,reqTask_id });
 	} catch (error) {
 		return c.json({ msg: "couldn't fetch list" }, 500);
 	}

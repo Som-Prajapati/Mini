@@ -64,7 +64,7 @@ app.get('/', (c) => c.json({ msg: 'server up and running' }));
 			const teamTask = await db.insert(task_assigned).values(assignedData);
 
 
-      return c.json({ ...newTask , ...newUsers , teamTask , msg: 'team task made' });
+      return c.json({ teamTask , msg: 'team task made' });
 		} catch (error) {
 			return c.json({ msg: "couldn't make a team task" }, 500)
 		}
@@ -124,7 +124,7 @@ app.get('/', (c) => c.json({ msg: 'server up and running' }));
 
 	
 
-		return c.json({ ...newTask});
+		return c.json({ newTask});
 	} catch (error) {
 		return c.json({ msg: "couldn't fetch list" }, 500);
 	}

@@ -70,7 +70,7 @@ app.post('/create', createTeamValidator, async (c) => {
 	
 		const feedUsers = await db.insert(user_team).values(userTeamInserts);
 
-		return c.json({ ...newTeam, newUsers, msg: 'team created' });
+		return c.json({ newTeam, newUsers, msg: 'team created' });
 	} catch (error) {
 		return c.json({ msg: "couldn't create team4" }, 500);
 	}

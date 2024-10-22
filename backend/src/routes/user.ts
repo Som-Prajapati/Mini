@@ -29,7 +29,7 @@ app.get('/fetch', getUserValidator, async (c) => {
 
 	
 
-		return c.json({ ...user});
+		return c.json({ user});
 	} catch (error) {
 		return c.json({ msg: "couldn't fetch user" }, 500);
 	}
@@ -43,7 +43,7 @@ app.post('/create',createUserValidator, async (c) => {
 	try {
 		const [newUser] = await db.insert(user).values(data).returning({ name: user.name, gmail: user.gmail });
 
-		return c.json({ ...newUser, msg: 'user created' });
+		return c.json({ newUser, msg: 'user created' });
 	} catch (error) {
 		return c.json({ msg: "couldn't create user" }, 500);
 	}
@@ -75,7 +75,7 @@ app.patch('/update',updateUserValidator, async (c) => {
 					.where(eq(user.user_id, reqUser_id.user_id))  // Ensure correct user is updated
 					.returning({ user_id : user.user_id });  // Return the columns after update
 
-		return c.json({ ...updateUser, msg: 'user updated' });
+		return c.json({ updateUser, msg: 'user updated' });
 	} catch (error) {
 		return c.json({ msg: "couldn't create user" }, 500);
 	}

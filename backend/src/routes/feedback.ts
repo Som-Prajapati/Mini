@@ -55,7 +55,7 @@ app.get('/', (c) => c.json({ msg: 'server up and running' }));
 			
 			const [newFeedback] = await db.insert(feedback).values(feedbackData).returning({feedback_id : feedback.feedback_id  });
 
-			return c.json({ ...newFeedback, msg: 'Feedback sent' });
+			return c.json({ newFeedback, msg: 'Feedback sent' });
 		} catch (error) {
 			return c.json({ msg: "couldn't sent Feedback" }, 500);
 

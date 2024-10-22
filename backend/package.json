@@ -18,10 +18,11 @@
     "wrangler": "^3.60.3"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.4.1",
     "@libsql/client": "^0.14.0",
+    "cotask": "file:",
     "drizzle-orm": "^0.34.1",
     "hono": "^4.6.4",
-    "@hono/zod-validator": "^0.4.1",
     "wrangler": "^3.80.4",
     "zod": "^3.23.8"
   }
