@@ -10,20 +10,18 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-export function SelectDemo() {
+export function SelectDemo({ value, onValueChange }) {
   return (
-    <Select>
+    <Select value={String(value)} onValueChange={(val) => onValueChange(parseInt(val, 10))}>
       <SelectTrigger className="w-[180px] bg-black">
-        <SelectValue placeholder="Select a fruit" />
+        <SelectValue placeholder="Priority" value={String(value)} />
       </SelectTrigger>
       <SelectContent className="bg-black">
         <SelectGroup>
-          <SelectLabel className="bg-black text-white">Fruits</SelectLabel>
-          <SelectItem value="apple" className="bg-black text-white">Apple</SelectItem>
-          <SelectItem value="banana" className="bg-black text-white">Banana</SelectItem>
-          <SelectItem value="blueberry" className="bg-black text-white">Blueberry</SelectItem>
-          <SelectItem value="grapes" className="bg-black text-white">Grapes</SelectItem>
-          <SelectItem value="pineapple" className="bg-black text-white">Pineapple</SelectItem>
+          <SelectLabel className="bg-black text-white">Priority</SelectLabel>
+          <SelectItem value="1" className="bg-black text-white">Low</SelectItem>
+          <SelectItem value="2" className="bg-black text-white">Mid</SelectItem>
+          <SelectItem value="3" className="bg-black text-white">High</SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>

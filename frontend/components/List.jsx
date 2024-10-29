@@ -1,13 +1,16 @@
-import React from 'react'
+import React from 'react';
 
-const List = () => {
+const List = ({ listName, handleClick }) => {
   return (
-    <>
-    <div className='text-white hover:bg-zinc-800 rounded-sm p-1 font-light text-xl h-[80px] w-[22vw] flex justify-start'>
-        hello0
+    <div 
+      onClick={handleClick}
+      className="px-4 py-2 text-white w-[21vw] h-[60px] hover:bg-zinc-800 cursor-pointer rounded-md transition-colors"
+    >
+      <div className="flex items-start justify-between">
+        <span>{listName}</span>
+      </div>
     </div>
-    </>
-  )
-}
+  );
+};
 
-export default List
+export default List;
