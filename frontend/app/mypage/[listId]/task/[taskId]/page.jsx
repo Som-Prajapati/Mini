@@ -129,10 +129,6 @@ const Page = ({ params }) => {
               </div>
             </div>
             <div className='h-[1px] w-full bg-zinc-800'></div>
-            <div className='p-3 text-white flex flex-col items-center'>
-              <p>Assigned To</p>
-              <div className='h-[1px] w-[50%] bg-zinc-800'></div>
-            </div>
           </>
         )}
       </div>

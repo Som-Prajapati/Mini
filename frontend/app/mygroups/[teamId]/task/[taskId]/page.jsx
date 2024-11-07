@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import Create from '@/components/Create';
+import CreateTeam from '@/components/CreateTeam';
 import MyTeamCard from '@/components/MyTeamCard';
 import TeamList from '@/components/TeamList';
 import { useRouter } from "next/navigation";
@@ -27,8 +28,8 @@ const Page = ({ params }) => {
     const [task, setTask] = useState(null);
 
     useEffect(() => {
-        if (myTeamTask?.newTask && params.taskId) {
-            const currentTask = myTeamTask.newTask.find(item => item.task_id === parseInt(params.taskId, 10));
+        if (myTeamTask && params.taskId) {
+            const currentTask = myTeamTask.find(item => item.task_id === parseInt(params.taskId, 10));
             setTask(currentTask);
         }
     }, [myTeamTask, params.taskId]);    
@@ -55,7 +56,7 @@ const Page = ({ params }) => {
         // }
         // console.log("hola")
     };
-    console.log("LELELELEEL",task)
+    console.log("LELELELEEL",myTeamTask)
 
     return (
         <>
@@ -135,7 +136,7 @@ const Page = ({ params }) => {
                     </>
                 )}
             </div>
-            <Create userMail={session?.user?.email} teamId={params.teamId} />
+            <CreateTeam userMail={session?.user?.email} teamId={params.teamId} />
         </>
     );
 };

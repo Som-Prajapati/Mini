@@ -103,6 +103,41 @@ export function useCreateMyTaskMutation() {
 }
 
 
+//Create My Team Task
+export function useCreateMyTeamTaskMutation() {
+  return useMutation({
+    mutationKey: ["createTeamTask"],
+    mutationFn: async ({ title, description, priority, end_d, taskStatus, userMail, teamName , userArray }) => {
+      try {
+        const response = await axios.post(
+          "https://cotask.somprajapati24-dcf.workers.dev/teamTask/create",
+          JSON.stringify({
+            title,
+            description,
+            status: taskStatus,
+            end_d:end_d,
+            priority,
+            user_gmail: userMail,
+            team_name: teamName,
+            user_array:userArray
+          }),
+          {
+            headers: { 
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        return response.data;
+      } catch (error) {
+        console.error("API call error:", error);
+        throw error; // Allows onError to catch this error in the calling component
+      }
+    },
+    retry: false, // Keeps retry disabled for specific control
+  });
+}
+
+
 export function useDeleteMyTaskMutation() {
   return useMutation({
     mutationKey: ["deleteTask"],

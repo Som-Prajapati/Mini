@@ -18,9 +18,9 @@ import {
 import { Plus } from "lucide-react"
 import SelectDemo from "./SelectDemo"
 import DatePickerDemo from "./DatePicker"
-import { useCreateMyTaskMutation } from "@/services/mutations"
+import { useCreateMyTeamTaskMutation } from "@/services/mutations"
 
-export function Create({ userMail, listId }) {
+export function Create({ userMail, teamId }) {
   const [form, setForm] = useState({
     title: '',
     description: '',
@@ -28,11 +28,12 @@ export function Create({ userMail, listId }) {
     end_d: null,
     taskStatus: 'ongoing',
     userMail: userMail,
-    listName: listId
+    teamName: teamId,
+    assign_to:[]
   })
 
   const [open, setOpen] = useState(false)
-  const mutation = useCreateMyTaskMutation()
+  const mutation = useCreateMyTeamTaskMutation()
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -63,7 +64,8 @@ export function Create({ userMail, listId }) {
       end_d: '',
       taskStatus: 'ongoing',
       userMail: userMail,
-      listName: listId
+      teamName: teamId,
+      assign_to:[]
     })
   }
 
@@ -151,6 +153,19 @@ export function Create({ userMail, listId }) {
                   value={form.end_d ? new Date(form.end_d) : null} // Convert ISO string back to Date
                   onChange={handleDateChange}
               />
+              <div className="flex flex-col items-start gap-2 mt-6">
+                <Label htmlFor="title" className="text-right">
+                  Assign to People
+                </Label>
+                <Input
+                  onChange={handleChange}
+                  id="assign_to"
+                  name='assign_to'
+                  value={form.assign_to}
+                  className="col-span-3 bg-black text-white"
+                  required
+                />
+              </div>
 
               </div>
               <SheetFooter>
