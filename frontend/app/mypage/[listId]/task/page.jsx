@@ -60,7 +60,7 @@ const Page = ({ params }) => {
               {(Array.isArray(listData?.newList) ? listData.newList : []).map((item, index) => {
                 // Get the first task of the current list
                 const firstTaskId = myTask?.newTask.find(task => task.listId === item.id)?.task_id; // Adjust according to your task's structure
-
+  
                 return (
                   <List 
                     key={index} 
