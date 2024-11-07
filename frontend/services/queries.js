@@ -18,6 +18,23 @@ export function useGetMyTaskQuery(userGmail, listName) {
   });
 }
 
+//myTeamTask
+export function useGetMyTeamTaskQuery(userGmail, TeamName) {
+  return useQuery({
+    queryKey: ["getMyTask", userGmail, TeamName],
+    queryFn: async () => {
+      const response = await axios.post(
+        "https://cotask.somprajapati24-dcf.workers.dev/teamTask/fetch",
+        {
+          user_gmail: userGmail,
+          team_name: TeamName
+        }
+      );
+      return response.data;  // Only return the data part
+    },
+  });
+}
+
 
 //User
 export function useGetUserQuery() {
@@ -58,4 +75,20 @@ export function useGetListQuery(userMail){
     },
     enabled: !!userMail
   })
+}
+
+//team
+export function useGetMyTeamQuery(userGmail) {
+  return useQuery({
+    queryKey: ["getTeam", userGmail],
+    queryFn: async () => {
+      const response = await axios.post(
+        "https://cotask.somprajapati24-dcf.workers.dev/team/fetch",
+        {
+          user_gmail: userGmail
+        }
+      );
+      return response.data;  // Only return the data part
+    },
+  });
 }

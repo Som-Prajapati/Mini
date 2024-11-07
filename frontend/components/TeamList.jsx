@@ -1,7 +1,7 @@
 import React from 'react';
 
-const List = ({ listName, handleClick }) => {
-  console.log("HELLLLOOOOOO",listName)
+const TeamList = ({ listName, handleClick }) => {
+  // console.log("HELLLLOOOOOO",listName)
   return (
     <div 
       onClick={handleClick}
@@ -14,4 +14,4 @@ const List = ({ listName, handleClick }) => {
   );
 };
 
-export default List;
+export default TeamList;

@@ -6,6 +6,7 @@ import Sidebar from '@/components/Sidebar'
 import Create from '@/components/Create'
 import Cards from '@/components/Cards'
 import { ArrowUp, Menu, Trash2 } from 'lucide-react'
+import SkeletonDemo from "@/components/SkeletonDemo"
 import DialogDemo from '@/components/DialogDemo'
 import List from "@/components/List";
 import { useRouter } from "next/navigation";
@@ -24,18 +25,18 @@ const Page = ({params}) => {
     `${session?.user?.email}`
   );
   const { data: taskData } = useGetMyTaskQuery(session?.user?.email, name);
-  if (listLoading) return <div>Loading...</div>;
+  if (listLoading) return <div><SkeletonDemo /></div>;
   if (listError) return <div>Error: {error.message}</div>;
 
 
 //   console.log(data)
-  console.log(listData)
+  // console.log(listData)
 
   const handleClick = () => {
-    console.log("Hello")
+    // console.log("Hello")
     router.push(`/mypage/${listData.newList[0]}/task/`)
   }
-  console.log("ijdfidkjskdjmsc",taskData)
+  // console.log("ijdfidkjskdjmsc",taskData)
 
   const handleRoute = async (name) => {
     try {

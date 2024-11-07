@@ -13,6 +13,8 @@ import { useGetMyTaskQuery, useGetListQuery } from "@/services/queries";
 import { useDeleteMyTaskMutation } from "@/services/mutations";
 import { ArrowDown } from "lucide-react";
 import { ArrowRight } from "lucide-react";
+import EmptyCard from '@/components/EmptyCard';
+import SkeletonDemo from "@/components/SkeletonDemo";
 
 const Loading = () => <div>Loading...</div>;
 const ErrorComponent = ({ error }) => <div>Error: {error?.message || "An error occurred"}</div>;
@@ -33,12 +35,11 @@ const Page = ({ params }) => {
     }
   }, [myTask, params.taskId]); // Update task whenever myTask or taskId changes
 
-  if (isLoading || listLoading) return <Loading />;
+  if (isLoading || listLoading) return <SkeletonDemo />;
   if (error || listError) return <ErrorComponent error={error || listError} />;
 
   const handleRoute = (name, taskId) => {
-    router.push(`/mypage/${name}/task/${taskId}`);
-    console.log(taskId)
+    router.push(`/mypage/${name}/task/25`);
   };
 
   const handleDelete = async () => {
@@ -46,18 +47,18 @@ const Page = ({ params }) => {
     try {
       await deleteTaskMutation.mutateAsync({
         userMail: session?.user?.email,
-        taskName: task.title, // or use task_id if your mutation supports it
+        task_id: task.task_id, // or use task_id if your mutation supports it
       });
-      console.log("Task deleted successfully");
-      router.push(`/mypage/College/task/8`); // Redirect or refresh as needed
+      console.log("Task deleted successfully"); // Redirect or refresh as needed
     } catch (error) {
       console.error("Error deleting task:", error);
     }
   };
-
+  console.log("kekekekke",myTask?.newTask)
   return (
     <>
       {/* Sidebar */}
+      
       <div className='w-[25vw] h-[90.8vh] bg-#09090b top-[55px] sticky rounded-md m-1 flex flex-col items-center gap-3 p-1 border-zinc-800 border-[0.5px]'>
         <div className='h-auto px-[1px] py-[10px] bg-#18181b w-[90%] rounded-md flex flex-col gap-2 justify-center items-center'>
           <h3 className='text-2xl font-bold text-white'>My List</h3>
@@ -65,13 +66,13 @@ const Page = ({ params }) => {
           <div className="h-[71vh] overflow-y-scroll bg-#09090b">
             <div className="flex flex-col">
               {(Array.isArray(listData?.newList) ? listData.newList : []).map((item, index) => {
-                const firstTaskId = myTask?.newTask.find(task => task.listId === item.id)?.task_id;
+                // const firstTaskId = myTask?.newTask.find(task => task.listId === item.id)?.task_id;
 
                 return (
                   <List 
                     key={index} 
                     listName={item.name} 
-                    handleClick={() => handleRoute(item.name, firstTaskId)} 
+                    handleClick={() => handleRoute(item.name)} 
                   />
                 );
               })}
@@ -85,13 +86,20 @@ const Page = ({ params }) => {
 
       {/* My Page */}
       <div className='h-auto w-auto bg-#09090b m-2 flex flex-col items-start gap-6 pt-[50px]'>
-        {(Array.isArray(myTask?.newTask) ? myTask.newTask : []).map((item, index) => (
-          <Cards myTask={myTask} keye={index} key={index} listName={params.listId} handleClick={() => handleRoute(item.name)} />
-        ))}
+      <div className='h-auto w-auto bg-#09090b m-2 flex flex-col items-start gap-6 pt-[50px]'>
+  {Array.isArray(myTask?.newTask) && myTask.newTask.length > 0 ? (
+    myTask.newTask.map((item, index) => (
+      <Cards myTask={myTask} keye={index} key={index} listName={params.listId} handleClick={() => handleRoute(item.name)} />
+    ))
+  ) : (
+    <EmptyCard/>
+  )}
+</div>
+
       </div>
 
       {/* Task Detail */}
-      <div className='h-[90.8vh] w-[35vw] rounded-md bg-#09090b top-[55px] sticky m-2 flex flex-col border border-zinc-800'>
+      <div className='h-[90.8vh] w-[35vw] rounded-md bg-#09090b top-[55px] left-[10px] sticky m-2 flex flex-col border border-zinc-800'>
         <div onClick={handleDelete} className='text-white flex justify-between m-1 p-3 cursor-pointer'>
           <Trash2 />
           <Menu />
@@ -101,7 +109,7 @@ const Page = ({ params }) => {
           <>
             <div className='flex flex-row p-1 justify-between'>
               <div className='flex flex-row p-0'>
-                <img src={session?.user?.image || "default-image.jpg"} alt="User" className='cardimg m-2 rounded-full' />
+                {/* <img src={session?.user?.image || "default-image.jpg"} alt="User" className='cardimg m-2 rounded-full' /> */}
                 <h1 className='text-2xl font-semibold text-white flex p-2 items-center'>{task.title}</h1>
               </div>
               <div className='text-white font-thin text-xs flex m-2 items-end'>

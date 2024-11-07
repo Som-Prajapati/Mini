@@ -3,19 +3,20 @@
 import { ArrowDown, ArrowRight, ArrowUp } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-const Card = ({ myTask, keye, listName }) => {
+const MyTeamCard = ({ myTeamTask, keye, teamName }) => {
     const router = useRouter();
+    // console.log("lol",myTeamTask)
     
-    // Check if myTask and newTask are defined
-    if (!myTask || !myTask.newTask || myTask.newTask.length <= keye) {
+    // Check if myTeamTask and newTask are defined
+    if (!myTeamTask || !myTeamTask || myTeamTask.length <= keye) {
         return null; // Return null or a fallback UI if data is not available
     }
-
-    const task = myTask.newTask[keye]; // Retrieve the task
+    
+    const task = myTeamTask[keye]; // Retrieve the task
 
     const handleClick = () => {
         const taskId = task.task_id; // Retrieve the task_id
-        router.push(`/mypage/${listName}/task/${taskId}`);
+        router.push(`/mygroups/${teamName}/task/${taskId}`);
     };
 
     return (
@@ -38,4 +39,4 @@ const Card = ({ myTask, keye, listName }) => {
     );
 }
 
-export default Card;
+export default MyTeamCard;

@@ -75,7 +75,7 @@ export function Create({ userMail, listId }) {
       alert("Please enter a title")
       return
     }
-    console.log(form)
+    // console.log(form)
     try {
       const result = await mutation.mutateAsync(
         form, // Send the entire form object

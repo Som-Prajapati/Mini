@@ -7,9 +7,9 @@ import { useEffect } from "react";
 
 export default function Home() {
   const { data: session } = useSession()
-  console.log(session?.user)
+  // console.log(session?.user)
   const { data, isLoading, error } = useGetUserQuery();
-  console.log(data)
+  // console.log(data)
   const mutation = useCreateMyTaskMutation()
   const handleUserCreate = async () => {
 
@@ -19,7 +19,7 @@ export default function Home() {
 
     const userEmail = session.user.email; // Get the user's email
     const userExists = data?.some(user => user.gmail === userEmail);
-    console.log("HELOOOOOOO",userExists)
+    // console.log("HELOOOOOOO",userExists)
     if(userExists){
       console.log("User Already Exist in the Db")
       return

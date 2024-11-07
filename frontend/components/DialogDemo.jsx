@@ -28,7 +28,7 @@ export function DialogDemo({ email }) {
 
     const handleSubmit = async (e) => {
       e.preventDefault()
-      console.log("Submitting title:", title) // Debug log
+    //   console.log("Submitting title:", title) // Debug log
 
       if (!title.trim()) return
       

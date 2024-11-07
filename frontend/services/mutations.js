@@ -70,7 +70,7 @@ export function useCreateMyTaskMutation() {
   return useMutation({
     mutationKey: ["createTask"],
     mutationFn: async ({ title, description, priority, end_d, taskStatus, userMail, listName }) => {
-      console.log("Sending task data:", { title, description, priority, end_d, taskStatus, userMail, listName });
+      // console.log("Sending task data:", { title, description, priority, end_d, taskStatus, userMail, listName });
     //   console.log(typeof formattedEndD); // Outputs: 'object'
     // console.log(formattedEndD instanceof Date); // Outputs: true
 
@@ -107,7 +107,7 @@ export function useDeleteMyTaskMutation() {
   return useMutation({
     mutationKey: ["deleteTask"],
     mutationFn: async ({ userMail, taskName }) => {
-      console.log("Deleting task data:");
+      // console.log("Deleting task data:");
     //   console.log(typeof formattedEndD); // Outputs: 'object'
     // console.log(formattedEndD instanceof Date); // Outputs: true
 
